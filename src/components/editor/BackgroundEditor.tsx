@@ -1,9 +1,8 @@
-
 import { useState } from "react";
 import { OGImageConfig, GradientPreset } from "@/types";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { ImageUploader } from "@/components/ImageUploader";
 import { ColorPicker } from "@/components/ColorPicker";
@@ -15,14 +14,20 @@ interface BackgroundEditorProps {
   updateConfig: (updates: Partial<OGImageConfig>) => void;
 }
 
-export function BackgroundEditor({ config, updateConfig }: BackgroundEditorProps) {
+export function BackgroundEditor({
+  config,
+  updateConfig,
+}: BackgroundEditorProps) {
   const [activeTab, setActiveTab] = useState(config.background.type);
 
   const handleBackgroundTypeChange = (type: string) => {
     setActiveTab(type as "color" | "gradient" | "image");
-    
-    let updatedBackground = { ...config.background, type: type as "color" | "gradient" | "image" };
-    
+
+    let updatedBackground = {
+      ...config.background,
+      type: type as "color" | "gradient" | "image",
+    };
+
     if (type === "color" && config.background.type !== "color") {
       updatedBackground.value = "#FFFFFF";
     } else if (type === "gradient" && config.background.type !== "gradient") {
@@ -38,7 +43,7 @@ export function BackgroundEditor({ config, updateConfig }: BackgroundEditorProps
     } else if (type === "image" && config.background.type !== "image") {
       updatedBackground.value = "";
     }
-    
+
     updateConfig({ background: updatedBackground });
   };
 
@@ -60,9 +65,9 @@ export function BackgroundEditor({ config, updateConfig }: BackgroundEditorProps
     <div className="space-y-6">
       <div className="space-y-4">
         <h3 className="text-lg font-medium">Background Type</h3>
-        
-        <RadioGroup 
-          value={config.background.type} 
+
+        <RadioGroup
+          value={config.background.type}
           onValueChange={handleBackgroundTypeChange}
           className="flex space-x-2"
         >
@@ -80,14 +85,18 @@ export function BackgroundEditor({ config, updateConfig }: BackgroundEditorProps
           </div>
         </RadioGroup>
       </div>
-      
+
       <div className="space-y-4">
         <Tabs value={activeTab} onValueChange={handleBackgroundTypeChange}>
           <TabsContent value="color" className="space-y-4">
-            <ColorPicker 
+            <ColorPicker
               label="Background Color"
-              value={config.background.type === "color" ? config.background.value : "#FFFFFF"}
-              onChange={(value) => 
+              value={
+                config.background.type === "color"
+                  ? config.background.value
+                  : "#FFFFFF"
+              }
+              onChange={(value) =>
                 updateConfig({
                   background: {
                     ...config.background,
@@ -98,7 +107,7 @@ export function BackgroundEditor({ config, updateConfig }: BackgroundEditorProps
               }
             />
           </TabsContent>
-          
+
           <TabsContent value="gradient" className="space-y-4">
             <div className="space-y-4">
               <Label>Gradient Presets</Label>
@@ -111,7 +120,7 @@ export function BackgroundEditor({ config, updateConfig }: BackgroundEditorProps
                       className="h-16 w-full p-0 overflow-hidden"
                       onClick={() => handleGradientPresetSelect(preset)}
                     >
-                      <div 
+                      <div
                         className="h-full w-full flex items-center justify-center"
                         style={{
                           backgroundImage: `linear-gradient(${preset.direction}, ${preset.from}, ${preset.to})`,
@@ -126,12 +135,12 @@ export function BackgroundEditor({ config, updateConfig }: BackgroundEditorProps
                 </div>
               </ScrollArea>
             </div>
-            
+
             <div className="space-y-2 grid grid-cols-2 gap-4">
-              <ColorPicker 
+              <ColorPicker
                 label="Start Color"
                 value={config.background.gradient?.from || "#6366F1"}
-                onChange={(value) => 
+                onChange={(value) =>
                   updateConfig({
                     background: {
                       ...config.background,
@@ -144,11 +153,11 @@ export function BackgroundEditor({ config, updateConfig }: BackgroundEditorProps
                   })
                 }
               />
-              
-              <ColorPicker 
+
+              <ColorPicker
                 label="End Color"
                 value={config.background.gradient?.to || "#8B5CF6"}
-                onChange={(value) => 
+                onChange={(value) =>
                   updateConfig({
                     background: {
                       ...config.background,
@@ -162,12 +171,12 @@ export function BackgroundEditor({ config, updateConfig }: BackgroundEditorProps
                 }
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label>Direction</Label>
-              <RadioGroup 
-                value={config.background.gradient?.direction || "to-r"} 
-                onValueChange={(value) => 
+              <RadioGroup
+                value={config.background.gradient?.direction || "to-r"}
+                onValueChange={(value) =>
                   updateConfig({
                     background: {
                       ...config.background,
@@ -216,11 +225,11 @@ export function BackgroundEditor({ config, updateConfig }: BackgroundEditorProps
               </RadioGroup>
             </div>
           </TabsContent>
-          
+
           <TabsContent value="image" className="space-y-4">
             <ImageUploader
               label="Background Image"
-              onImageChange={(imageUrl) => 
+              onImageChange={(imageUrl) =>
                 updateConfig({
                   background: {
                     ...config.background,
